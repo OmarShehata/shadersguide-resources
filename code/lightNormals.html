@@ -16,20 +16,20 @@
 			vec2 xy = gl_FragCoord.xy / res.xy;
 			vec4 color = texture2D(tex,xy);
 			vec4 normalVector = texture2D(norm,xy);//We get the normal value of this pixel
-			vec2 lightPosition = light.xy;
-			lightPosition.y = res.y - lightPosition.y;
+			vec2 lightPosition = light.xy / res.xy;
+			lightPosition.y = 1.0 - lightPosition.y;
 
-			//Get the distance between the current pixel, and the light center
-			float dist = distance(gl_FragCoord.xy,lightPosition.xy);
+			vec3 LightVector = vec3(lightPosition.x - xy.x,lightPosition.y - xy.y,0.2);
+			LightVector = normalize(LightVector);
+			normalVector.x -= 0.5;
+			normalVector.y -= 0.5;
+			vec3 NormalVector = normalize(normalVector.xyz);
 
-			//Dist is a factor between 0 and light.z * res.x
-			//So we normalize it
-			float normalizedDistanceFactor = 1.0 - (dist / (light.z * res.x));
-			vec3 ViewerVector = vec3(0.5,0.5,1.0);
-			float dotProduct = dot(ViewerVector,normalVector.xyz);
+		    // Compute the diffuse term for the Phong equation
+    		float diffuse      = 1.0 * dot( NormalVector, LightVector );
 
 			//color.rgb *= normalizedDistanceFactor;
-			color.rgb *= normalizedDistanceFactor * dotProduct;
+			color.rgb *= diffuse;
 			gl_FragColor = color;
 
 		 }
@@ -62,6 +62,10 @@
 		
 		var textureURL = "https://raw.githubusercontent.com/OmarShehata/shadersguide-resources/master/images/blocks.JPG"
 		var normalURL = "https://raw.githubusercontent.com/OmarShehata/shadersguide-resources/master/normal_maps/blocks_normal.JPG"
+
+		textureURL = "../images/normal_test.JPG"
+		normalURL = "../normal_maps/normal_test.JPG"
+
 		THREE.ImageUtils.crossOrigin = '';//Allows us to load an external image
 		
 		//Load in the texture and the normal
@@ -85,7 +89,7 @@
 		//Move the camera back so we can see it
 		camera.position.z = 2;
 
-		uniforms.light.value.z = 0.8;
+		uniforms.light.value.z = 1.0;
 
 		//Render everything!
 		function render() {
