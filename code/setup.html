@@ -13,7 +13,7 @@
 		uniform vec2 res;
 		void main() {
 			vec2 xy = gl_FragCoord.xy / res.xy;
-			vec4 color = texture2D(norm,xy);
+			vec4 color = texture2D(tex,xy);
 		  	gl_FragColor = color;
 
 		 }
@@ -44,8 +44,8 @@
 		//Pull the shader code from the html
 		var shaderCode = document.getElementById("fragShader").innerHTML;
 		
-		var textureURL = "https://raw.githubusercontent.com/OmarShehata/shadersguide-resources/master/images/lenna.png"
-		var normalURL = "https://raw.githubusercontent.com/OmarShehata/shadersguide-resources/master/normal_maps/lenna_normal.png"
+		var textureURL = "https://raw.githubusercontent.com/OmarShehata/shadersguide-resources/master/images/blocks.JPG"
+		var normalURL = "https://raw.githubusercontent.com/OmarShehata/shadersguide-resources/master/normal_maps/blocks_normal.JPG"
 		THREE.ImageUtils.crossOrigin = '';//Allows us to load an external image
 		
 		//Load in the texture and the normal
