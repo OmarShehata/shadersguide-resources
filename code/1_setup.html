@@ -9,13 +9,11 @@
 <body>
 	<script id="fragShader" type="shader-code">
 		uniform sampler2D tex;
-		uniform sampler2D norm;
 		uniform vec2 res;
 		void main() {
-			vec2 xy = gl_FragCoord.xy / res.xy;
-			vec4 color = texture2D(tex,xy);
-		  	gl_FragColor = color;
-
+        vec2 pixel = gl_FragCoord.xy / res.xy;
+        vec4 color = texture2D(tex,pixel);
+        gl_FragColor = color;
 		 }
 	</script>
 	<script>
@@ -26,16 +24,16 @@
 		var renderer;
 
 		function scene_setup(){
-			//This is all code needed to set up a basic ThreeJS scene
+		  //This is all code needed to set up a basic ThreeJS scene
 
-			//First we initialize the scene and our camera
-			scene = new THREE.Scene();
-			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		  //First we initialize the scene and our camera
+		  scene = new THREE.Scene();
+		  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-			//We create the WebGL renderer and add it to the document
-			renderer = new THREE.WebGLRenderer();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
+		  //We create the WebGL renderer and add it to the document
+		  renderer = new THREE.WebGLRenderer();
+		  renderer.setSize( window.innerWidth, window.innerHeight );
+		  document.body.appendChild( renderer.domElement );
 		}
 
 		//Initialize the Threejs scene
@@ -43,21 +41,18 @@
 
 		//Pull the shader code from the html
 		var shaderCode = document.getElementById("fragShader").innerHTML;
-		
+
 		var textureURL = "https://raw.githubusercontent.com/OmarShehata/shadersguide-resources/master/images/blocks.JPG"
-		var normalURL = "https://raw.githubusercontent.com/OmarShehata/shadersguide-resources/master/normal_maps/blocks_normal.JPG"
 		THREE.ImageUtils.crossOrigin = '';//Allows us to load an external image
-		
-		//Load in the texture and the normal
+
+		//Load in the texture 
 		var texture = THREE.ImageUtils.loadTexture(textureURL);
-		var normal = THREE.ImageUtils.loadTexture(normalURL);
 
 		//Set up the uniforms we'll send to our share
 		//More info on uniform types: http://threejs.org/docs/#Reference/Materials/ShaderMaterial
 		var uniforms = {
-			tex : {type:'t',value:texture},//The texture
-			norm: {type:'t',value:normal},//Normal
-			res : {type: 'v2',value:new THREE.Vector2(window.innerWidth,window.innerHeight)}//Keeps the resolution
+		  tex : {type:'t',value:texture},//The texture
+		  res : {type: 'v2',value:new THREE.Vector2(window.innerWidth,window.innerHeight)}//Keeps the resolution
 		}
 		//We stick our shader onto a 2d plane big enough to fill the screen
 		var material = new THREE.ShaderMaterial({uniforms:uniforms,fragmentShader:shaderCode})
@@ -70,8 +65,8 @@
 
 		//Render everything!
 		function render() {
-			requestAnimationFrame( render );
-			renderer.render( scene, camera );
+		  requestAnimationFrame( render );
+		  renderer.render( scene, camera );
 		}
 		render();
 	</script>
